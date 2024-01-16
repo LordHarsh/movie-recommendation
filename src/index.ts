@@ -5,6 +5,9 @@ import config from './config';
 async function startServer() {
   const app = express();
   await Loaders({ expressApp: app });
+  console.log(`MongoURL: ${config.databaseUrl}`)
+  console.log(`Port: ${config.port}`)
+
   app
     .listen(config.port, () => {
       console.log(`
