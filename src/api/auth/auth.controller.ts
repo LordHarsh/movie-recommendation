@@ -14,7 +14,11 @@ export const signupController = async (
     });
     res
       .status(201)
-      .send({ message: "User created successfully!", data: { token } });
+      .send({
+        success: true,
+        message: "User created successfully!",
+        data: { token },
+      });
   } catch (error) {
     next(error);
   }
@@ -32,7 +36,11 @@ export const loginController = async (
     });
     res
       .status(200)
-      .send({ message: "User logged in successfully!", data: { token } });
+      .send({
+        success: true,
+        message: "User logged in successfully!",
+        data: { token },
+      });
   } catch (error) {
     next(error);
   }
