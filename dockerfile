@@ -16,7 +16,7 @@ COPY . .
 RUN npm run build
 
 # Expose the port defined in the environment variable, or use the default (e.g., 3000)
-ENV PORT=3000
+ENV PORT=$PORT
 EXPOSE $PORT
 
 # Command to start the Express server
