@@ -1,32 +1,26 @@
-# Use the official Node.js LTS image
-FROM node:20.11.0-alpine
-
-# Set the working directory inside the container
-WORKDIR /server
-
-# Copy package.json and package-lock.json to the container
+# Development stage
+FROM node:20.11.0-alpine as development
+WORKDIR /app
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
-
-# Copy the rest of the application code to the container
+COPY tsconfig.json ./
 COPY . .
+RUN pwd
+CMD [ "npm", "run", "dev" ]
 
-# Run build if necessary (remove this line if not applicable)
+# Builder stage
+FROM development as builder
+WORKDIR /app
+# Build the app with devDependencies still installed from "development" stage
 RUN npm run build
+# Clear dependencies and reinstall for production (no devDependencies)
+RUN rm -rf node_modules
+RUN npm ci --only=production
 
-# Declare environment variables (without values)
-ENV PORT $PORT
-ENV NODE_ENV $NODE_ENV
-ENV MONGODB_URI $MONGODB_URI
-ENV JWT_SECRET $JWT_SECRET
-ENV LOG_LEVEL $LOG_LEVEL
-ENV TMDB_API_KEY $TMDB_API_KEY
-ENV TMDB_API_URL $TMDB_API_KEY
 
-# Expose the port (it will be mapped at runtime)
-EXPOSE $PORT
-
-# Command to start the Express server
-CMD ["npm", "start"]
+# Production stage
+FROM alpine:latest as production
+RUN apk --no-cache add nodejs ca-certificates
+WORKDIR /root/
+COPY --from=builder /app ./
+CMD [ "node", "build/src/index.ts" ]
