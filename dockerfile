@@ -5,7 +5,6 @@ COPY package*.json ./
 RUN npm install
 COPY tsconfig.json ./
 COPY . .
-RUN pwd
 CMD [ "npm", "run", "dev" ]
 
 # Builder stage
@@ -21,6 +20,6 @@ RUN npm ci --only=production
 # Production stage
 FROM alpine:latest as production
 RUN apk --no-cache add nodejs ca-certificates
-WORKDIR /root/
+WORKDIR /app
 COPY --from=builder /app ./
 CMD [ "node", "build/src/index.ts" ]

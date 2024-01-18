@@ -1,0 +1,17 @@
+version: '3.8'  # Specify the version of Docker Compose
+
+services:
+  express-server:
+    build:
+      context: .  # Build context is the current directory
+      target: production  # Use the production stage from your Dockerfile
+    ports:
+      - "${PORT}:${PORT}"  # Map port 3000 in the container to port 3000 on the host
+    environment:
+      # Define your environment variables here (replace with actual values)
+      - PORT=${PORT}
+      - MONGODB_URI=${MONGODB_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - TMDB_API_KEY=${TMDB_API_KEY}
+      - TMDB_API_URL=${TMDB_API_URL}
