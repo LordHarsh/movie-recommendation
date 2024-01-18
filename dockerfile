@@ -22,4 +22,4 @@ FROM alpine:latest as production
 RUN apk --no-cache add nodejs ca-certificates
 WORKDIR /app
 COPY --from=builder /app ./
-CMD [ "node", "build/src/index.ts" ]
+CMD [ "node", "build/src/index.js" ]
